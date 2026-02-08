@@ -5,365 +5,436 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>社團點名簿</title>
   <style>
-    /* ===== 春季粉嫩花卉色系 ===== */
     :root{
-      --primary: #ff6fae;      /* 櫻花粉 */
-      --primary2: #ff9ac7;     /* 淡粉 */
-      --success: #35b37e;      /* 春草綠 */
-      --danger: #ff4d6d;       /* 玫瑰紅 */
-      --gray: #7b7b86;
+      --primary:#ff6ea9;
+      --primary-2:#ff9ec9;
+      --success:#35b96f;
+      --danger:#ff4d6d;
+      --gray:#6b7280;
 
-      --bg1: #fff6fb;          /* 粉白 */
-      --bg2: #f2fbff;          /* 春天藍 */
-      --card: rgba(255,255,255,0.88);
-      --border: rgba(255, 182, 213, 0.45);
-      --shadow: 0 10px 25px rgba(255, 111, 174, 0.18);
+      --bg1:#fff1f7;
+      --bg2:#f1fbff;
+      --card:#ffffffcc;
+
+      --border:#ffd6e8;
+      --soft-shadow: 0 14px 40px rgba(255, 110, 169, 0.15);
+      --soft-shadow-2: 0 10px 22px rgba(0,0,0,0.08);
     }
 
-    * { box-sizing: border-box; }
+    *{ box-sizing:border-box; }
 
     body{
-      font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-      padding: 14px;
-      color: #3c4043;
-
-      /* 春季可愛背景 */
+      font-family:'PingFang TC','Microsoft JhengHei',sans-serif;
+      padding: 12px;
+      color:#3c4043;
+      min-height:100vh;
       background:
-        radial-gradient(circle at 15% 10%, rgba(255, 154, 199, 0.28) 0%, transparent 45%),
-        radial-gradient(circle at 85% 15%, rgba(164, 230, 255, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 20% 90%, rgba(255, 230, 155, 0.22) 0%, transparent 55%),
+        radial-gradient(900px 420px at 15% 15%, rgba(255, 158, 201, 0.35), transparent 60%),
+        radial-gradient(900px 420px at 85% 10%, rgba(170, 232, 255, 0.45), transparent 60%),
+        radial-gradient(900px 420px at 70% 85%, rgba(255, 216, 120, 0.25), transparent 60%),
         linear-gradient(135deg, var(--bg1), var(--bg2));
-      min-height: 100vh;
+      overflow-x:hidden;
     }
 
-    /* 小花飄飄裝飾 */
-    body::before{
+    /* 背景漂浮花朵 */
+    body::before, body::after{
       content:"";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.75;
+      position:fixed;
+      inset:-80px;
+      pointer-events:none;
+      opacity:.55;
+      background-repeat:repeat;
+      background-size: 160px 160px;
+      filter: blur(.2px);
+      z-index:-1;
+    }
+
+    body::before{
       background-image:
-        radial-gradient(circle at 12% 18%, rgba(255, 154, 199, 0.35) 0 2px, transparent 3px),
-        radial-gradient(circle at 30% 35%, rgba(255, 206, 236, 0.35) 0 2px, transparent 3px),
-        radial-gradient(circle at 72% 20%, rgba(255, 236, 184, 0.35) 0 2px, transparent 3px),
-        radial-gradient(circle at 88% 52%, rgba(164, 230, 255, 0.30) 0 2px, transparent 3px),
-        radial-gradient(circle at 18% 78%, rgba(255, 154, 199, 0.28) 0 2px, transparent 3px);
-      filter: blur(0.2px);
+        radial-gradient(circle at 22px 28px, rgba(255,110,169,.25) 0 10px, transparent 11px),
+        radial-gradient(circle at 62px 70px, rgba(255,174,214,.28) 0 9px, transparent 10px),
+        radial-gradient(circle at 120px 38px, rgba(255,210,230,.35) 0 8px, transparent 9px);
+      animation: floatBg 12s ease-in-out infinite;
+    }
+
+    body::after{
+      background-image:
+        radial-gradient(circle at 35px 95px, rgba(170,232,255,.35) 0 9px, transparent 10px),
+        radial-gradient(circle at 110px 105px, rgba(255,216,120,.22) 0 10px, transparent 11px);
+      animation: floatBg2 15s ease-in-out infinite;
+    }
+
+    @keyframes floatBg{
+      0%,100%{ transform: translate(0,0); }
+      50%{ transform: translate(18px, -12px); }
+    }
+    @keyframes floatBg2{
+      0%,100%{ transform: translate(0,0); }
+      50%{ transform: translate(-16px, 10px); }
     }
 
     .card{
       max-width: 560px;
-      margin: auto;
+      margin: 10px auto;
+      padding: 18px 18px 16px;
+      border-radius: 22px;
       background: var(--card);
+      border: 1px solid rgba(255, 214, 232, 0.9);
+      box-shadow: var(--soft-shadow);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 22px;
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
       position: relative;
-      overflow: hidden;
+      overflow:hidden;
     }
 
-    /* 卡片角落花朵裝飾 */
-    .card::after{
-      content:"🌸";
+    .card::before{
+      content:"";
       position:absolute;
-      right: 14px;
-      top: 12px;
-      font-size: 26px;
-      opacity: 0.85;
-      transform: rotate(10deg);
+      inset:-2px;
+      background:
+        radial-gradient(240px 120px at 15% 10%, rgba(255, 158, 201, 0.35), transparent 60%),
+        radial-gradient(260px 120px at 85% 0%, rgba(170, 232, 255, 0.35), transparent 60%);
+      pointer-events:none;
     }
 
     h2{
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 10px;
-      color: #ff4f9a;
-      letter-spacing: 1px;
+      text-align:center;
+      margin: 4px 0 12px;
       font-size: 26px;
-      text-shadow: 0 2px 0 rgba(255, 154, 199, 0.25);
+      letter-spacing: 1px;
+      color: #ff4f9a;
+      text-shadow: 0 10px 18px rgba(255,110,169,.15);
+      position: relative;
+      z-index: 1;
     }
 
-    p{
-      margin: 10px 0;
+    h2::after{
+      content:"🌸";
+      margin-left: 6px;
+      display:inline-block;
+      transform: translateY(1px);
+      animation: bloom 1.8s ease-in-out infinite;
     }
 
-    /* tabs */
+    @keyframes bloom{
+      0%,100%{ transform: translateY(1px) rotate(0deg) scale(1); }
+      50%{ transform: translateY(-2px) rotate(-6deg) scale(1.05); }
+    }
+
     .tabs{
-      display: flex;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.55);
+      display:flex;
+      gap:10px;
+      margin: 6px 0 18px;
       padding: 8px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 182, 213, 0.35);
-      margin-bottom: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,214,232,0.8);
+      box-shadow: var(--soft-shadow-2);
+      position: relative;
+      z-index:1;
     }
 
     .tab{
-      flex: 1;
-      padding: 12px;
-      text-align: center;
-      cursor: pointer;
+      flex:1;
+      padding: 12px 10px;
+      text-align:center;
+      cursor:pointer;
       color: var(--gray);
       font-weight: 800;
-      border-radius: 12px;
+      border-radius: 16px;
       transition: 0.25s;
-      user-select: none;
+      position: relative;
+      user-select:none;
+      overflow:hidden;
     }
 
     .tab:hover{
       transform: translateY(-1px);
-      background: rgba(255, 182, 213, 0.22);
+      background: rgba(255, 240, 248, 0.75);
     }
 
+    /* Tab 花朵 icon */
+    .tab::before{
+      content:"🌼";
+      margin-right: 6px;
+      display:inline-block;
+      transform: translateY(1px);
+      opacity:.85;
+      filter: drop-shadow(0 10px 12px rgba(255,110,169,.12));
+    }
+
+    /* Active Tab 春季高亮 */
     .tab.active{
-      color: #ff2f86;
-      background: linear-gradient(135deg, rgba(255, 154, 199, 0.55), rgba(255, 236, 184, 0.35));
-      border: 1px solid rgba(255, 111, 174, 0.35);
-      box-shadow: 0 6px 14px rgba(255, 111, 174, 0.16);
+      color:#ff2f86;
+      background:
+        linear-gradient(135deg, rgba(255, 158, 201, 0.35), rgba(170, 232, 255, 0.25));
+      border: 1px solid rgba(255, 110, 169, 0.25);
+      box-shadow: 0 10px 22px rgba(255,110,169,.12);
+    }
+
+    /* Active Tab 小花動畫 */
+    .tab.active::after{
+      content:"🌸";
+      position:absolute;
+      right: 14px;
+      top: 10px;
+      font-size: 18px;
+      animation: tabFlower 1.3s ease-in-out infinite;
+      opacity: 0.95;
+    }
+
+    @keyframes tabFlower{
+      0%,100%{ transform: translateY(0) rotate(0deg) scale(1); }
+      50%{ transform: translateY(-3px) rotate(10deg) scale(1.08); }
     }
 
     .section{
-      background: rgba(255, 255, 255, 0.72);
-      padding: 16px;
-      border-radius: 14px;
+      background: rgba(255,255,255,0.72);
+      padding: 14px 14px;
+      border-radius: 18px;
       margin-bottom: 14px;
-      border: 1px solid rgba(255, 182, 213, 0.35);
-      box-shadow: 0 6px 14px rgba(255, 111, 174, 0.08);
+      border: 1px solid rgba(255,214,232,0.8);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+      position: relative;
+      z-index: 1;
     }
 
-    /* 社團按鈕區 */
+    label b{
+      color:#ff3f90;
+    }
+
     .btn-grid{
-      display: grid;
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 10px;
+      gap: 10px;
     }
 
     button{
-      padding: 12px;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
+      padding: 12px 12px;
+      border:none;
+      border-radius: 16px;
+      cursor:pointer;
       font-weight: 900;
-      transition: 0.18s;
-      letter-spacing: 0.3px;
+      transition: transform .18s, box-shadow .18s, filter .18s;
+      position: relative;
+      overflow:hidden;
     }
 
-    button:active{
-      transform: scale(0.98);
+    /* 按鈕 hover 飄花效果 */
+    button::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(255, 110, 169, 0.55) 0 4px, transparent 5px),
+        radial-gradient(circle at 40% 70%, rgba(255, 200, 230, 0.75) 0 4px, transparent 5px),
+        radial-gradient(circle at 70% 85%, rgba(170, 232, 255, 0.6) 0 4px, transparent 5px),
+        radial-gradient(circle at 85% 65%, rgba(255, 216, 120, 0.35) 0 4px, transparent 5px);
+      transform: translateY(8px);
+      transition: .2s;
+      filter: blur(.1px);
     }
 
-    /* 社團選擇按鈕 */
+    button:hover::after{
+      opacity: 1;
+      animation: petals 0.75s ease-out forwards;
+    }
+
+    @keyframes petals{
+      0%{ transform: translateY(10px); opacity:.0; }
+      40%{ opacity:1; }
+      100%{ transform: translateY(-18px); opacity:0; }
+    }
+
+    button:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(255,110,169,.16);
+      filter: saturate(1.05);
+    }
+
+    /* 社團按鈕 */
     .btn-club{
-      background: linear-gradient(135deg, rgba(255, 154, 199, 0.35), rgba(164, 230, 255, 0.20));
+      background: linear-gradient(135deg, rgba(255, 158, 201, 0.28), rgba(170, 232, 255, 0.25));
       color: #ff2f86;
       font-size: 16px;
-      border: 1px solid rgba(255, 111, 174, 0.25);
-      box-shadow: 0 8px 18px rgba(255, 111, 174, 0.12);
-      position: relative;
+      border: 1px solid rgba(255, 110, 169, 0.22);
+      box-shadow: 0 10px 18px rgba(255,110,169,.10);
     }
 
     .btn-club::before{
-      content: "🌷";
+      content:"🌷";
       margin-right: 6px;
     }
 
-    .btn-club:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(255, 111, 174, 0.18);
-    }
-
-    /* 送出按鈕 */
+    /* 主送出按鈕 */
     .btn-submit{
-      background: linear-gradient(135deg, #ff6fae, #ffb7d8);
-      color: white;
-      width: 100%;
+      width:100%;
       font-size: 18px;
-      border: 1px solid rgba(255, 111, 174, 0.35);
-      box-shadow: 0 10px 22px rgba(255, 111, 174, 0.18);
+      color: #fff;
+      background: linear-gradient(135deg, #ff5aa2, #ff9ec9);
+      box-shadow: 0 18px 28px rgba(255, 90, 162, 0.22);
+      border: 1px solid rgba(255,255,255,0.45);
     }
 
     .btn-submit::before{
-      content:"🌸 ";
-    }
-
-    .btn-submit:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 14px 26px rgba(255, 111, 174, 0.22);
+      content:"🌸";
+      margin-right: 6px;
     }
 
     .btn-submit:disabled{
-      background: #f2c7d8;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-      opacity: 0.75;
+      background: #ffd2e6;
+      cursor:not-allowed;
+      box-shadow:none;
+      transform:none;
     }
 
-    /* 刪除全部 */
+    /* 危險按鈕 */
     .btn-danger{
-      background: rgba(255, 77, 109, 0.10);
-      color: var(--danger);
-      width: 100%;
+      width:100%;
       margin-top: 10px;
+      background: rgba(255, 77, 109, 0.10);
+      color: #ff2d55;
       border: 1px solid rgba(255, 77, 109, 0.45);
-      border-radius: 14px;
+      box-shadow: 0 12px 20px rgba(255,77,109,.12);
     }
 
     .btn-danger::before{
-      content:"🌼 ";
+      content:"🌺";
+      margin-right: 6px;
     }
 
-    .btn-danger:hover{
-      background: rgba(255, 77, 109, 0.16);
-      transform: translateY(-1px);
-    }
-
-    /* 單筆刪除 */
     .btn-outline-danger{
-      background: rgba(255,255,255,0.85);
-      color: var(--danger);
-      border: 1px solid rgba(255, 77, 109, 0.55);
-      padding: 6px 8px;
-      font-size: 12px;
-      border-radius: 10px;
-      white-space: nowrap;
-      font-weight: 900;
-      transition: 0.18s;
-    }
-
-    .btn-outline-danger:hover{
-      background: rgba(255, 77, 109, 0.10);
-      transform: translateY(-1px);
-    }
-
-    /* 更換社團 */
-    .btn-back{
       background: rgba(255,255,255,0.8);
-      margin-bottom: 15px;
-      width: 100%;
-      border: 1px solid rgba(255, 182, 213, 0.4);
-      border-radius: 14px;
-      color: #ff2f86;
-      font-weight: 900;
-    }
-    .btn-back::before{
-      content:"🌿 ";
-    }
-    .btn-back:hover{
-      background: rgba(255, 182, 213, 0.18);
-      transform: translateY(-1px);
+      color: #ff2d55;
+      border: 1px solid rgba(255, 77, 109, 0.55);
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      box-shadow: 0 10px 18px rgba(255,77,109,.10);
     }
 
-    /* 名單兩欄排列 */
+    .btn-outline-danger::before{
+      content:"🧺";
+      margin-right: 4px;
+    }
+
+    /* 更換社團按鈕（保留原功能，但改可愛） */
+    .btn-back{
+      width:100%;
+      margin-bottom: 14px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,214,232,0.9);
+      color: #ff2f86;
+      box-shadow: 0 12px 18px rgba(0,0,0,0.05);
+    }
+
+    .btn-back::before{
+      content:"🌿";
+      margin-right: 6px;
+    }
+
+    /* 名單兩欄排列樣式（維持不變） */
     #uncheckList, #checkedList{
-      display: grid;
+      display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 10px;
     }
 
     .student-row{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      border: 1px solid rgba(255, 182, 213, 0.35);
-      background: rgba(255,255,255,0.92);
-      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 10px;
+      border-radius: 16px;
       font-size: 14px;
-      box-shadow: 0 8px 16px rgba(255, 111, 174, 0.08);
-      transition: 0.18s;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,214,232,0.85);
+      box-shadow: 0 10px 16px rgba(0,0,0,0.04);
+      transition: .2s;
+      position: relative;
+      overflow:hidden;
     }
 
     .student-row:hover{
       transform: translateY(-1px);
-      box-shadow: 0 12px 18px rgba(255, 111, 174, 0.12);
+      box-shadow: 0 14px 22px rgba(255,110,169,.10);
     }
 
     .student-row span{
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      margin-right: 8px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      margin-right: 6px;
       font-weight: 800;
-      color: #444;
+      color:#374151;
     }
 
-    /* checkbox */
-    input[type="checkbox"]{
-      accent-color: #ff6fae;
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
+    .student-row input[type="checkbox"]{
+      transform: scale(1.25);
+      accent-color: #ff5aa2;
+      cursor:pointer;
     }
 
-    /* 日期、密碼 */
     input[type="date"], input[type="password"]{
-      width: 100%;
+      width:100%;
       padding: 11px 12px;
       margin-top: 8px;
-      border: 1px solid rgba(255, 182, 213, 0.55);
-      border-radius: 14px;
+      border-radius: 16px;
       font-size: 16px;
+      border: 1px solid rgba(255,214,232,0.95);
       background: rgba(255,255,255,0.85);
-      outline: none;
-      transition: 0.18s;
+      outline:none;
+      transition: .2s;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.03);
     }
 
     input[type="date"]:focus, input[type="password"]:focus{
-      border-color: rgba(255, 111, 174, 0.75);
-      box-shadow: 0 0 0 4px rgba(255, 111, 174, 0.12);
+      border-color: rgba(255, 90, 162, 0.55);
+      box-shadow: 0 16px 26px rgba(255,90,162,0.12);
+      transform: translateY(-1px);
     }
 
-    .hidden{ display: none; }
-
-    #currentClubDisp{
-      text-align:center;
-      font-weight: 900;
-      color: #ff2f86;
-      margin: 0 0 10px 0;
-      letter-spacing: 0.5px;
-    }
+    .hidden{ display:none; }
 
     #status{
-      text-align: center;
+      text-align:center;
       margin-top: 14px;
-      padding: 12px;
-      border-radius: 14px;
+      padding: 12px 12px;
+      border-radius: 18px;
       font-weight: 900;
-      min-height: 20px;
+      min-height: 22px;
       border: 1px solid transparent;
+      background: rgba(255,255,255,0.65);
+      box-shadow: 0 12px 18px rgba(0,0,0,0.04);
     }
 
     .msg-success{
-      background-color: rgba(53, 179, 126, 0.12);
-      color: #138a5a;
-      border-color: rgba(53, 179, 126, 0.35);
+      background-color: rgba(53, 185, 111, 0.10);
+      color: #138a49;
+      border-color: rgba(53,185,111,0.25);
     }
 
     .msg-error{
       background-color: rgba(255, 77, 109, 0.10);
-      color: #d7263d;
-      border-color: rgba(255, 77, 109, 0.35);
+      color: #d61f44;
+      border-color: rgba(255,77,109,0.25);
     }
 
     .msg-loading{
-      color: #7b7b86;
+      color: #6b7280;
       font-style: italic;
-      background: rgba(255,255,255,0.55);
-      border-color: rgba(255, 182, 213, 0.35);
+      border-color: rgba(255,214,232,0.5);
     }
 
-    /* 手機 */
-    @media (max-width: 520px){
-      .card{ padding: 18px; }
-      #uncheckList, #checkedList{ grid-template-columns: 1fr; }
+    /* 手機更順 */
+    @media (max-width: 420px){
       h2{ font-size: 24px; }
+      .tab{ font-size: 14px; padding: 11px 8px; }
+      .student-row{ padding: 10px 9px; }
+      button{ border-radius: 16px; }
     }
   </style>
 </head>
@@ -373,13 +444,13 @@
   <h2>社團點名簿</h2>
 
   <div id="clubSelection">
-    <p style="text-align:center; font-weight:900; color:#ff2f86;">請選擇社團：</p>
+    <p style="text-align:center; font-weight:800; color:#ff2f86;">請選擇社團：</p>
     <div id="clubBtns" class="btn-grid">讀取社團清單中...</div>
   </div>
 
   <div id="mainPage" class="hidden">
-    <button class="btn-back" onclick="location.reload()">← 更換社團</button>
-    <h3 id="currentClubDisp"></h3>
+    <button onclick="location.reload()" class="btn-back">← 更換社團</button>
+    <h3 id="currentClubDisp" style="text-align:center; margin: 0 0 12px; color:#ff2f86; font-weight:900;"></h3>
 
     <div class="tabs">
       <div id="tab1" class="tab active" onclick="switchTab('take')">點名登記</div>
@@ -465,8 +536,8 @@
   async function refreshLists() {
     const date = document.getElementById('targetDate').value;
     if(!curClub || !date) return;
-    document.getElementById('uncheckList').innerHTML = "<p style='grid-column:span 2;text-align:center;'>載入中...</p>";
-    document.getElementById('checkedList').innerHTML = "<p style='grid-column:span 2;text-align:center;'>載入中...</p>";
+    document.getElementById('uncheckList').innerHTML = "<p style='grid-column:span 2;text-align:center; font-weight:800; color:#ff2f86;'>載入中... 🌷</p>";
+    document.getElementById('checkedList').innerHTML = "<p style='grid-column:span 2;text-align:center; font-weight:800; color:#ff2f86;'>載入中... 🌸</p>";
     try {
       const [r1, r2] = await Promise.all([
         fetch(`${API_URL}?action=getStudents&clubName=${encodeURIComponent(curClub)}&date=${date}&mode=unchecked`),
@@ -480,14 +551,14 @@
   function renderList(id, data, type) {
     const container = document.getElementById(id);
     if (!data.length) {
-      container.innerHTML = "<p style='grid-column:span 2;color:gray;text-align:center;font-size:14px;'>無資料</p>";
+      container.innerHTML = "<p style='grid-column:span 2;color:#9ca3af;text-align:center;font-size:14px;font-weight:800;'>無資料</p>";
       return;
     }
     container.innerHTML = "";
     data.forEach(name => {
       let d = document.createElement('div');
       d.className = "student-row";
-      if(type === 'checkbox') d.innerHTML = `<span>${name}</span><input type="checkbox" name="stu" value="${name}" style="transform:scale(1.2);">`;
+      if(type === 'checkbox') d.innerHTML = `<span>${name}</span><input type="checkbox" name="stu" value="${name}">`;
       else d.innerHTML = `<span>${name}</span><button class="btn-outline-danger" onclick="deleteSingle('${name}')">刪除</button>`;
       container.appendChild(d);
     });
@@ -502,7 +573,11 @@
     else s.classList.add('msg-loading');
   }
 
-  function clearStatus() { const s = document.getElementById('status'); s.innerText = ""; s.className = ""; }
+  function clearStatus() { 
+    const s = document.getElementById('status'); 
+    s.innerText = ""; 
+    s.className = ""; 
+  }
 
   async function callPost(data) {
     const pwd = document.getElementById('adminPwd').value;
